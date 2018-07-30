@@ -1,0 +1,74 @@
+Cassandra commands
+
+KeySpace (nothing but Database in sql)
+==============================================================================
+1.  create keyspace KeyspaceName with replication={'class':strategy name,'replication_factor': No of replications on different nodes};
+    ex: create keyspace university with replication={'class':'SimpleStrategy','replication_factor': 3};
+   
+2.  Alter Keyspace KeyspaceName with replication={'class':'StrategyName','replication_factor': no of replications on different nodes} with DURABLE_WRITES=true/false;
+    Note:DURABLE_WRITES is true by default. If it is set to false then data stored in the keyspace will bypass the commitlog
+		KeyspaceName cannot be changed
+		replication_factor and StrategyName can be changed
+    ex:Alter Keyspace university with replication={'class':'NetworkTopologyStrategy','replication_factor': 1} with DURABLE_WRITES=false; 
+   
+		---- this doesn't work because the replication_factor must be used with SimpleStrategy
+		---- forNetworkTopologyStrategy, instead of replication_factor use 'datacenter_name':no of replicas in that datacenter
+
+	Alter Keyspace university with replication={'class':'NetworkTopologyStrategy','datacenter1': 1,'datacenter2':3} with DURABLE_WRITES=false; 
+
+		---- here, it creates 2 datacenters, datacenter1 with only 1 replica and datacenter2 with 3 replica
+
+3.  Drop keyspace KeyspaceName
+	ex:Drop keyspace university
+
+
+	
+Table
+==============================================================================
+1.	Create table KeyspaceName.TableName(
+	ColumnName1 DataType,
+	ColumnName2 DataType,
+	.
+	.
+	Primary key(ColumnName1,ColumnName2 . . .)
+	) with PropertyName=PropertyValue;
+	
+	          (OR)
+			  
+	CREATE TABLE tablename(  
+   	 column1 name datatype PRIMARYKEY,  
+    	 column2 name data type,  
+    	 column3 name data type,  
+    	);  
+	
+2.	Alter table KeyspaceName.TableName  
+	alter ColumnName TYPE ColumnDataype 
+	add ColumnName ColumnDataType 
+	drop ColumnName 
+	Rename ColumnName To NewColumnName 
+	
+	
+3.	Drop Table KeyspaceName.TableName;
+
+4.	Truncate KeyspaceName.TableName;
+
+
+
+Data
+==============================================================================
+1.	INSERT INTO KeyspaceName.TableName(ColumnName1, ColumnName2, . . . .)VALUES (Column1Value, Column2Value, . . . .)
+	ex: INSERT INTO student (student_id, student_fees, student_name) VALUES(1,5000, 'Ajeet');  
+
+2.	UPDATE KeyspaceName.TableName 
+	SET ColumnName1=new Column1Value,
+		ColumnName2=new Column2Value,
+		ColumnName3=new Column3Value,
+		.
+		.
+		.
+	WHERE ColumnName=ColumnValue
+	ex: UPDATE student SET student_fees=10000,student_name='Rahul' WHERE student_id=2;
+
+3.	Delete from KeyspaceName.TableName Where ColumnName1=ColumnValue
+				(OR)
+	Delete ColumnNames from KeyspaceName.TableName where ColumnName1=ColumnValue
